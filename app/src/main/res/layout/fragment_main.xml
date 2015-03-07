@@ -3,7 +3,8 @@
     android:layout_height="fill_parent"
     android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
 
-    tools:context=".MainActivity$PlaceholderFragment">
+    tools:context=".MainActivity$PlaceholderFragment"
+    android:id="@+id/fragment_creategroup">
     
     <LinearLayout
         android:orientation="vertical"
