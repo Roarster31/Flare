@@ -4,6 +4,6 @@
 /.idea/libraries
 .DS_Store
 /build
-.idea/misc.xml
-Flare.iml
-app/app.iml
+/.idea/misc.xml
+/Flare.iml
+/app/app.iml
