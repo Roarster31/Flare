@@ -4,5 +4,6 @@
     <string name="app_name">Flare</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="preference_file_key">com.dbuggers.flare.UserInfo</string>
 
 </resources>

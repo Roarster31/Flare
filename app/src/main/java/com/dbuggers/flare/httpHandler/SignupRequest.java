@@ -27,6 +27,9 @@ public class SignupRequest {
 
     public interface SignupRequestListener {
         public void onSignedUp();
+        public void onInternetError();
+        public void onUserExistsAlready();
+        public void onInvalidResponse();
     }
 
     public SignupRequest(String name, String bio, String number, TypedFile img, SignupRequestListener listener){
@@ -51,6 +54,8 @@ public class SignupRequest {
                 if(s.error.equals("1")){
                     Log.v(finalTAG,"There was an error adding the user");
                     Log.v(finalTAG, s.errorMessage);
+                    mListener.onUserExistsAlready();
+
                 } else if(s.error.equals("0")){
                     Log.v(finalTAG,"All ok");
                     Log.v(finalTAG, s.errorMessage);
@@ -59,6 +64,8 @@ public class SignupRequest {
                 } else {
                     Log.v(finalTAG,"No Valid Response");
                     Log.v(finalTAG, s.errorMessage);
+
+                    mListener.onInvalidResponse();
                 }
 
             }
@@ -66,6 +73,7 @@ public class SignupRequest {
             @Override
             public void failure(RetrofitError error) {
                 Log.v(finalTAG, error.toString());
+                mListener.onInternetError();
 
             }
         });

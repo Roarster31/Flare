@@ -3,6 +3,7 @@ package com.dbuggers.flare;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
@@ -117,6 +118,9 @@ public class SignupFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        // Check to see if user already exists
+        readSettingsFile();
+
         // Get the text from the form
         nameTxt = (EditText)rootView.findViewById(R.id.nameTxt);
         bioTxt = (EditText)rootView.findViewById(R.id.bioTxt);
@@ -168,26 +172,63 @@ public class SignupFragment extends Fragment {
                     toast.show();
                 }
 
-                // Convert image
-                File photo = new File(mCurrentPhotoPath);
-                TypedFile typedImage = new TypedFile("application/octet-stream", photo);
-                Log.v(TAG, "Converted Image");
+                // If all tests ok
+                if(testsOk == 1) {
+                    // Convert image
+                    File photo = new File(mCurrentPhotoPath);
+                    TypedFile typedImage = new TypedFile("application/octet-stream", photo);
+                    Log.v(TAG, "Converted Image");
 
-                // Create signup request
-                SignupRequest signUp = new SignupRequest(nameTxt.getText().toString(),
-                        bioTxt.getText().toString(),
-                        numTxt.getText().toString(),
-                        typedImage,
-                        new SignupRequest.SignupRequestListener() {
-                            @Override
-                            public void onSignedUp() {
-                                signupInterface.onSignupClicked();
-                            }
-                        });
+                    // Create signup request
+                    SignupRequest signUp = new SignupRequest(nameTxt.getText().toString(),
+                            bioTxt.getText().toString(),
+                            numTxt.getText().toString(),
+                            typedImage,
+                            new SignupRequest.SignupRequestListener() {
+                                @Override
+                                public void onSignedUp() {
+                                    // Save the details into a file
+                                    createSettingsFile();
+                                    // Make a transition
+                                    signupInterface.onSignupClicked();
+                                }
 
+                                @Override
+                                public void onInternetError() {
+                                    Context context = getActivity().getApplicationContext();
+                                    int duration = Toast.LENGTH_SHORT;
+
+                                    Toast toast = Toast.makeText(context, "Error connecting", duration);
+                                    toast.show();
+
+                                }
+
+                                @Override
+                                public void onUserExistsAlready() {
+                                    Context context = getActivity().getApplicationContext();
+                                    int duration = Toast.LENGTH_SHORT;
+
+                                    Toast toast = Toast.makeText(context, "User Already Exists", duration);
+                                    toast.show();
+
+                                }
+
+                                @Override
+                                public void onInvalidResponse() {
+                                    Context context = getActivity().getApplicationContext();
+                                    int duration = Toast.LENGTH_SHORT;
+
+                                    Toast toast = Toast.makeText(context, "Invalid Response", duration);
+                                    toast.show();
+
+                                }
+                            });
+                }
 
 
             }
+
+
         });
 
         // Image view press
@@ -210,6 +251,56 @@ public class SignupFragment extends Fragment {
             }
         });
         return rootView;
+
+    }
+
+    private void createSettingsFile() {
+        Context context = getActivity();
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        // Get field values
+        String nameTextValue = nameTxt.getText().toString();
+        String bioTextValue = bioTxt.getText().toString();
+        String numTextValue = numTxt.getText().toString();
+
+        editor.putString("nameTextValue", nameTextValue);
+        editor.putString("bioTextValue", bioTextValue);
+        editor.putString("numTextValue", numTextValue);
+        Log.v(TAG,"Updated settings file");
+        editor.commit();
+    }
+    private void readSettingsFile() {
+        Context context = getActivity();
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        // Get field values
+        String nameText = sharedPref.getString("nameTextValue",null);
+
+        if(nameText != null && !nameText.equals("")){
+
+            Log.v(TAG, "Settings File has values will move frags: " + nameText);
+            if(getActivity() instanceof SignupInterface){
+                signupInterface = (SignupInterface) getActivity();
+            }else{
+                throw new IllegalStateException(getActivity().getClass().getName()+" must implement SignupInterface");
+            }
+            
+            signupInterface.onSignupClicked();
+        } else {
+            Log.v(TAG, "Settings File is empty");
+        }
+    }
+    public void clearSettingsFile(){
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+        editor.commit();
+        Log.v(TAG, "Cleared Settings File");
 
     }
 }
