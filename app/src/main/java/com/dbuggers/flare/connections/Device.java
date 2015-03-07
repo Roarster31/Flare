@@ -7,7 +7,7 @@ import com.dbuggers.flare.models.MinimalPayload;
  * Created by rory on 07/03/15.
  */
 public abstract class Device {
-    protected String currentHash;
+    private String currentHash;
 
     private DeviceInterface mdeviceInterface;
 
