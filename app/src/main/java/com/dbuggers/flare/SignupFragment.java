@@ -12,7 +12,7 @@ import android.widget.Button;
  * Created by benallen on 07/03/15.
  */
 public class SignupFragment extends Fragment {
-
+    private static final String TAG = "Interfaces";
     private SignupInterface signupInterface;
 
     public interface SignupInterface {
@@ -42,7 +42,7 @@ public class SignupFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                Log.v("Ah", "Button Press");
+                Log.v(TAG, "Sign up button pressed");
                 signupInterface.onSignupClicked();
 
             }

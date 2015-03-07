@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 public class MainActivity extends Activity implements SignupFragment.SignupInterface, GroupMakerFragment.GroupMakerInterface {
 
+    private static final String TAG = "Interfaces";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +27,7 @@ public class MainActivity extends Activity implements SignupFragment.SignupInter
 
     @Override
     public void onSignupClicked() {
-        Log.v("ah", "signup clicked");
+        Log.v("ah", "Signing up user");
         /*getFragmentManager().beginTransaction()
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 .replace(R.id.container, new GroupMakerFragment())
@@ -33,6 +35,18 @@ public class MainActivity extends Activity implements SignupFragment.SignupInter
         getFragmentManager().beginTransaction()
                 .setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
                 .replace(R.id.container, new GroupMakerFragment())
+                .commit();
+    }
+    @Override
+    public void onGroupJoin() {
+        Log.v(TAG, "The user has either created or found a group");
+        /*getFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                .replace(R.id.container, new GroupMakerFragment())
+                .commit();*/
+        getFragmentManager().beginTransaction()
+                .setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
+                .replace(R.id.container, new MessageFragment())
                 .commit();
     }
 }

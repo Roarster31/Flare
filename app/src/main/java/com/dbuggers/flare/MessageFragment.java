@@ -10,28 +10,27 @@ import android.view.ViewGroup;
 /**
  * Created by benallen on 07/03/15.
  */
-public class GroupMakerFragment extends Fragment {
+public class MessageFragment extends Fragment {
     private static final String TAG = "Interfaces";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_creategroup, container, false);
-        Log.v(TAG, "GroupMaker Fragment Loaded");
+        View rootView = inflater.inflate(R.layout.fragment_message, container, false);
+        Log.v(TAG, "Message Fragment Loaded");
         return rootView;
     }
-    private GroupMakerInterface groupMakerInterface;
-    public interface GroupMakerInterface {
-        public void onGroupJoin();
+    private MessageInterface messageInterface;
+    public interface MessageInterface {
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if(getActivity() instanceof GroupMakerInterface){
-            groupMakerInterface = (GroupMakerInterface) getActivity();
+        if(getActivity() instanceof MessageInterface){
+            messageInterface = (MessageInterface) getActivity();
         }else{
-            throw new IllegalStateException(getActivity().getClass().getName()+" must implement GroupMakerInterface");
+            throw new IllegalStateException(getActivity().getClass().getName()+" must implement MessageInterface");
         }
     }
 

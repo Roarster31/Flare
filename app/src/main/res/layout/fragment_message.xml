@@ -42,12 +42,6 @@
                     android:typeface="sans"
                     android:shadowColor="#ffff2a37"
                     android:gravity="center_horizontal" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Move to Next"
-                    android:id="@+id/nextBtn" />
             </LinearLayout>
 
         </LinearLayout>
