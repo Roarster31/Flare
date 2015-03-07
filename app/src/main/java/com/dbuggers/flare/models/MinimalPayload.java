@@ -1,5 +1,7 @@
 package com.dbuggers.flare.models;
 
+import java.util.List;
+
 /**
  * Created by rory on 07/03/15.
  */
@@ -7,6 +9,7 @@ public class MinimalPayload {
     private String currentHash;
     private int userId;
     private int groupId;
+    private List<String> trustedAddresses;
 
     public String getCurrentHash() {
         return currentHash;

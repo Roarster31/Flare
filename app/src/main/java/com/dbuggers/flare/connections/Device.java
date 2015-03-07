@@ -8,6 +8,7 @@ import com.dbuggers.flare.models.MinimalPayload;
  */
 public abstract class Device {
     private String currentHash;
+    private String macAddress;
 
     private DeviceInterface mdeviceInterface;
 
