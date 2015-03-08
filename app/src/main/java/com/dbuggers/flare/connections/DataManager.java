@@ -114,7 +114,6 @@ public class DataManager implements DeviceInterface {
 
     public DataManager(Activity activity, ConnectionType... types) {
 
-        userId = new Random().nextInt(10000);
         mActivity = activity;
         mDiscoveryAdapterList = new ArrayList<DiscoveryAdapter>();
         mBroadcastAdapterList = new ArrayList<BroadcastAdapter>();
@@ -124,14 +123,14 @@ public class DataManager implements DeviceInterface {
         mBluetoothManager =
                 (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
-
-        if(mBluetoothAdapter.getAddress().equals("EC:88:92:B9:86:76")){
-            messages.add(new MessageEntry(1231301123, 56123, "heya"));
-            messages.add(new MessageEntry(1231401123, 1231, "boo"));
-            messages.add(new MessageEntry(1251301123, 56123, "ouch"));
-        }else{
-            messages.add(new MessageEntry(1231301123, 56123, "heya"));
-        }
+//
+//        if(mBluetoothAdapter.getAddress().equals("EC:88:92:B9:86:76")){
+//            messages.add(new MessageEntry(1231301123, 56123, "heya"));
+//            messages.add(new MessageEntry(1231401123, 1231, "boo"));
+//            messages.add(new MessageEntry(1251301123, 56123, "ouch"));
+//        }else{
+//            messages.add(new MessageEntry(1231301123, 56123, "heya"));
+//        }
 
         for(ConnectionType type : types){
             if(type == ConnectionType.BLUETOOTH){
