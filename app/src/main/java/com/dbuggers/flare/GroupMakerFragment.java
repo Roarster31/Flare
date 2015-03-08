@@ -3,6 +3,7 @@ package com.dbuggers.flare;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -42,16 +43,18 @@ public class GroupMakerFragment extends Fragment {
     private String gId = "ajsfkjhd23412sf823";
     private String uId = "isjd12234foi932";
     private final int shouldDisplayError = 1;
+    private Button button;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_creategroup, container, false);
         Log.v(TAG, "GroupMaker Fragment Loaded");
-        final Button button = (Button) rootView.findViewById(R.id.nextBtn);
+        button = (Button) rootView.findViewById(R.id.nextBtn);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 groupMakerInterface.onGroupJoin();
+
 
             }
         });
@@ -113,6 +116,16 @@ public class GroupMakerFragment extends Fragment {
                         }
                     }
                 });
+    }
+    private String readUserId() {
+        Context context = getActivity();
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        // Get field values
+        String userId = sharedPref.getString("userId",null);
+        return userId;
+
     }
 
 }
