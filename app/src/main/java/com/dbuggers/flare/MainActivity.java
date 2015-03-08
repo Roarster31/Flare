@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity implements SignupFragment.SignupInterface, GroupMakerFragment.GroupMakerInterface, MessageFragment.MessageFragmentInterface {
+public class MainActivity extends Activity implements SignupFragment.SignupInterface, GroupMakerFragment.GroupMakerInterface, DataManagerInterface{
 
     private static final String TAG = "Interfaces";
     private DataManager dataManager;
@@ -35,7 +35,7 @@ public class MainActivity extends Activity implements SignupFragment.SignupInter
                     .commit();
         }
 
-        dataManager = new DataManager(this, DataManager.ConnectionType.BLUETOOTH);
+        dataManager = new DataManager(this, DataManager.ConnectionType.HTTP);
         dataManager.setGroupId(4543456);
 
         dataManager.startServices();

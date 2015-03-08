@@ -84,7 +84,61 @@
                     android:layout_height="fill_parent"
                     android:id="@+id/list"
                     android:layout_gravity="top"
-                    android:paddingBottom="60dp" />
+                    android:paddingBottom="120dp"
+                    android:dividerHeight="0dp"
+                    android:divider="@null"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="100dp"
+                    android:layout_alignBottom="@+id/list"
+                    android:background="@drawable/grad_over"
+                    android:layout_centerHorizontal="true">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bar"
+                        android:id="@+id/barBtn"
+                        android:theme="@style/zxing_CaptureTheme"
+                        android:layout_margin="0dp"
+                        android:layout_gravity="center_horizontal" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Leave"
+                        android:id="@+id/outsideBtn"
+                        android:theme="@style/zxing_CaptureTheme"
+                        android:layout_margin="0dp"
+                        android:layout_marginLeft="0dp"
+                        android:layout_gravity="center_horizontal" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="HELP"
+                        android:id="@+id/helpBtn"
+                        android:theme="@style/zxing_CaptureTheme"
+                        android:layout_gravity="center_horizontal" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loo"
+                        android:id="@+id/toiletBtn"
+                        android:theme="@style/zxing_CaptureTheme"
+                        android:layout_gravity="center_horizontal" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kebab"
+                        android:id="@+id/kebabBtn"
+                        android:theme="@style/zxing_CaptureTheme"
+                        android:layout_gravity="center_horizontal" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:orientation="horizontal"

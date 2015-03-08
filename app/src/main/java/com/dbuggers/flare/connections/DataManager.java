@@ -33,6 +33,10 @@ public class DataManager implements DeviceInterface {
     private int userId;
     private List<DataUpdateListener> listeners;
 
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     public interface DataUpdateListener {
         public void onDataUpdated();
     }
