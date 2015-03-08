@@ -20,13 +20,6 @@ import com.dbuggers.flare.models.MessageEntry;
 
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.http.GET;
-import retrofit.http.Query;
-
 /**
  * Created by benallen on 07/03/15.
  */
@@ -36,20 +29,13 @@ public class MessageFragment extends Fragment implements DataManager.DataUpdateL
     ListView mListView;
     StableArrayAdapter adapter;
     EditText inputTxt;
-    RestAdapter restAdapter;
-    HTTPService service;
-    MessageFragmentInterface mMessageFragmentInterface;
-
-    public interface MessageFragmentInterface {
+    DataManagerInterface mDataManagerInterface;
 
 
-
-        public DataManager getDataManager();
-    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMessageFragmentInterface.getDataManager().addDataListener(this);
+        mDataManagerInterface.getDataManager().addDataListener(this);
     }
 
     @Override
@@ -58,6 +44,7 @@ public class MessageFragment extends Fragment implements DataManager.DataUpdateL
         View rootView = inflater.inflate(R.layout.fragment_message, container, false);
         Log.v(TAG, "Message Fragment Loaded");
 
+        // Send button
         final Button button = (Button) rootView.findViewById(R.id.sendBtn);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -66,17 +53,59 @@ public class MessageFragment extends Fragment implements DataManager.DataUpdateL
                 userSendMessage();
             }
         });
+
+        // At Bar Button
+        final Button buttonBar = (Button) rootView.findViewById(R.id.barBtn);
+        buttonBar.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                Log.v(mTAG, "Message Being Sent");
+                userSendCustomMessage("I'm at the bar!");
+            }
+        });
+        // Outside Button
+        final Button buttonOutside = (Button) rootView.findViewById(R.id.outsideBtn);
+        buttonOutside.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                Log.v(mTAG, "Message Being Sent");
+                userSendCustomMessage("Lets leave");
+            }
+        });
+        // Help Button
+        final Button buttonHelp = (Button) rootView.findViewById(R.id.helpBtn);
+        buttonHelp.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                Log.v(mTAG, "Message Being Sent");
+                userSendCustomMessage("I need help! Come find me!");
+            }
+        });
+        // Toilets Button
+        final Button buttonToilet = (Button) rootView.findViewById(R.id.toiletBtn);
+        buttonToilet.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                Log.v(mTAG, "Message Being Sent");
+                userSendCustomMessage("I've gone to the loo");
+            }
+        });
+        // Toilets Button
+        final Button buttonKebab = (Button) rootView.findViewById(R.id.kebabBtn);
+        buttonKebab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                Log.v(mTAG, "Message Being Sent");
+                userSendCustomMessage("I've gone to the kebab shop");
+            }
+        });
+
         inputTxt = (EditText)rootView.findViewById(R.id.inputTxt);
         mListView = (ListView) rootView.findViewById(R.id.list);
 
-        adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, mMessageFragmentInterface.getDataManager().getMessagesList());
+
+        adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, mDataManagerInterface.getDataManager().getMessagesList());
         mListView.setAdapter(adapter);
-
-        restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://benallen.info/projects/friendBeacon")
-                .build();
-
-        service = restAdapter.create(HTTPService.class);
 
         return rootView;
     }
@@ -93,42 +122,33 @@ public class MessageFragment extends Fragment implements DataManager.DataUpdateL
         }
     }
     public void userSendMessage(){
-        broadcastMessage();
         String userInput = inputTxt.getText().toString();
+        userSendCustomMessage(userInput);
+    }
+    public void userSendCustomMessage(String userInput){
         inputTxt.setText("");
-        mMessageFragmentInterface.getDataManager().sendMessage(userInput);
-
+        mDataManagerInterface.getDataManager().sendMessage(userInput);
         adapter.notifyDataSetChanged();
-
+        scrollMyListViewToBottom();
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(inputTxt.getWindowToken(), 0);
 
     }
-    public void broadcastMessage(){
-        // Internet
-
-        service.listData("octocat", new Callback<JsonModel>() {
+    private void scrollMyListViewToBottom() {
+        mListView.post(new Runnable() {
             @Override
-            public void success(JsonModel s, Response response) {
-                Log.v("Response", s.r.toString());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.v("Response", error.toString());
-
+            public void run() {
+                mListView.setSelection(adapter.getCount() - 1);
             }
         });
-        // Bluetooth
     }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if(activity instanceof MessageFragmentInterface){
-            mMessageFragmentInterface = (MessageFragmentInterface) activity;
+        if(activity instanceof DataManagerInterface){
+            mDataManagerInterface = (DataManagerInterface) activity;
         }else{
             throw new IllegalStateException(getActivity().getClass().getName()+" must implement MessageFragmentInterface");
         }
@@ -159,27 +179,18 @@ public class MessageFragment extends Fragment implements DataManager.DataUpdateL
             final MessageEntry entry = getItem(position);
 
             View rowView;
-            if(entry.getUserId() == mMessageFragmentInterface.getDataManager().getUserId()) {
-                //rowView = inflater.inflate(R.layout.row_layout_user, parent, false);
+            if(entry.getUserId() == mDataManagerInterface.getDataManager().getUserId()) {
+                rowView = inflater.inflate(R.layout.row_layout_user, parent, false);
             }else{
-                //rowView = inflater.inflate(R.layout.row_layout_else, parent, false);
+                rowView = inflater.inflate(R.layout.row_layout_else, parent, false);
 
             }
 
-            //TextView messageTextview = (TextView) rowView.findViewById(R.id.message);
-          //  messageTextview.setText(entry.getMessage());
+            TextView messageTextview = (TextView) rowView.findViewById(R.id.message);
+            messageTextview.setText(entry.getMessage());
 
-            return null;
+            return rowView;
         }
-    }
-
-    interface HTTPService {
-        @GET("/main.php")
-        void listData(@Query("u") String u, Callback<JsonModel> cb);
-    }
-    class JsonModel {
-        public String r ;
-
     }
 
 }

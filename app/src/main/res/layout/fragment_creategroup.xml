@@ -46,22 +46,18 @@
                     android:id="@+id/qrCodeImg"
                     android:layout_gravity="center_horizontal" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Or"
-                    android:id="@+id/textView"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:textSize="40dp" />
-
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Scan Code"
                     android:id="@+id/scanBtn"
+                    android:theme="@style/zxing_CaptureTheme" />
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Continue"
+                    android:id="@+id/continueBtn"
                     android:theme="@style/zxing_CaptureTheme" />
             </LinearLayout>
 
