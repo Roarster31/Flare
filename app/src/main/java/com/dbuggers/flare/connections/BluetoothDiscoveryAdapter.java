@@ -52,6 +52,8 @@ public class BluetoothDiscoveryAdapter extends DiscoveryAdapter implements Bluet
 
         mHandler = new Handler();
 
+        mHandler.postDelayed(mRepeatableScanRunnable, 10000);
+
     }
 
 
@@ -63,6 +65,7 @@ public class BluetoothDiscoveryAdapter extends DiscoveryAdapter implements Bluet
     @Override
     public void scan() {
 
+        lastScan = System.currentTimeMillis();
         scanWasClean = false;
         //Scan for devices advertising our custom service
         ScanFilter scanFilter = new ScanFilter.Builder()
@@ -78,21 +81,36 @@ public class BluetoothDiscoveryAdapter extends DiscoveryAdapter implements Bluet
     }
 
     private boolean scanWasClean;
+
     private Runnable mScanRunnable = new Runnable() {
         @Override
         public void run() {
-          if(scanWasClean){
-              stopScan();
-              scan();
-          }
+            if(scanWasClean){
+                stopScan();
+                scan();
+            }
         }
     };
+    private Runnable mRepeatableScanRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if(currentDevice != null && !currentDevice.isConnected() && System.currentTimeMillis() - lastScan > 10000){
+                stopScan();
+                scan();
+            }else{
+                mHandler.postDelayed(mRepeatableScanRunnable, 10000);
+            }
+        }
+    };
+    private BluetoothDevice currentDevice;
+    private long lastScan;
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             mHandler.removeCallbacks(mScanRunnable);
             scanWasClean = processDevice(result);
             mHandler.postDelayed(mScanRunnable, CLEAN_SCAN_INTERVAL);
+            lastScan = System.currentTimeMillis();
         }
 
         /**
@@ -124,7 +142,7 @@ public class BluetoothDiscoveryAdapter extends DiscoveryAdapter implements Bluet
                     Log.e(TAG, "hashes not not equal: " + new String(hash) + " != " + new String(messagesHash));
                     stopScan();
 
-                    final BluetoothDevice device = new BluetoothDevice(mDeviceInterface, BluetoothDiscoveryAdapter.this);
+                    currentDevice = new BluetoothDevice(mDeviceInterface, BluetoothDiscoveryAdapter.this);
 
 //                     final Handler handler = new Handler();
 //
@@ -139,7 +157,7 @@ public class BluetoothDiscoveryAdapter extends DiscoveryAdapter implements Bluet
 //                    };
 //                     handler.postDelayed(t,1000);
 
-                    device.connect(mContext, mBluetoothAdapter, result.getDevice());
+                    currentDevice.connect(mContext, mBluetoothAdapter, result.getDevice());
                     return false;
 //                    handler.postDelayed(this,1000);
 
@@ -161,6 +179,7 @@ public class BluetoothDiscoveryAdapter extends DiscoveryAdapter implements Bluet
             scanWasClean = true;
             mHandler.postDelayed(mScanRunnable, CLEAN_SCAN_INTERVAL);
             stopScan();
+            lastScan = System.currentTimeMillis();
         }
 
         @Override

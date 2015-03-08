@@ -7,6 +7,8 @@ import com.dbuggers.flare.models.MessageEntry;
 import com.dbuggers.flare.models.MessagesPayload;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -52,30 +54,15 @@ public class HTTPDevice extends Device {
 
         service = restAdapter.create(MessagesHTTPService.class);
 
-        service.listData(mDeviceInterface.getClientGroupId(), new Callback<List<JSONMessage>>() {
+        service.listData(mDeviceInterface.getClientGroupId(), new Callback<JSONObject>() {
             @Override
-            public void success(List<JSONMessage> jsonMessages, Response response) {
+            public void success(JSONObject obj, Response response) {
                 Log.v(TAG, "Response success!");
                 Log.v(TAG, response.toString());
-                if(jsonMessages != null && jsonMessages.size() > 0) {
-                    Log.v(TAG, "Response:" + jsonMessages.toString());
-                    messageEntries = new ArrayList<MessageEntry>();
-                    for (JSONMessage j : jsonMessages) {
-                        //2015-03-06 23:36:33
-                        MessageEntry temp = new MessageEntry(Integer.valueOf(j.date), Integer.valueOf(j.uid), j.msg);
-                        Log.v(TAG, temp.toString() + " ");
-                        if (temp != null) {
-                            messageEntries.add(temp);
-                        }
 
-                        try {
-                            mDeviceInterface.onHashReceived(HTTPDevice.this, MessageHasher.hash(messageEntries));
-                        } catch (IOException | NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                        }
+                Gson gson = new Gson();
 
-                    }
-                }
+
             }
 
             @Override
@@ -129,7 +116,7 @@ interface SendHTTPMessage {
 }
 interface MessagesHTTPService {
     @GET("/readMessages.php")
-    void listData(@Query("gid") int gid,Callback<List<JSONMessage>> cb);
+    void listData(@Query("gid") int gid,Callback<JSONObject> cb);
 }
 class JSONMessage {
     public String date;
