@@ -2,46 +2,46 @@
 <items version="2" >
 
     <item
-        jar="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.2.2/classes.jar"
+        jar="/Users/rory/Documents/dev/Flare/app/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.2.2/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="803c4c913beac8f7980d680c725a40835d1d7c77">
-        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/classes-7b8b08889fb2635f8edefcc5ffbc45609bd0811a.jar" />
+        <dex dex="/Users/rory/Documents/dev/Flare/app/build/intermediates/pre-dexed/debug/classes-d0a1182e6064394f670ae55a56f1dda19dfe2353.jar" />
     </item>
     <item
-        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jar="/Users/rory/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
-        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/gson-2.3.1-d30706150a43be9e4e61e784ef867e65663c2517.jar" />
+        <dex dex="/Users/rory/Documents/dev/Flare/app/build/intermediates/pre-dexed/debug/gson-2.3.1-e498f109018ac5668497749c6d2d4d48b95b6026.jar" />
     </item>
     <item
-        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.2.0/959c454243581fdf730abfd4f4745441724bcf2c/okhttp-2.2.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="959c454243581fdf730abfd4f4745441724bcf2c">
-        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/okhttp-2.2.0-19844d991073bb23a33407c4e517751dadc7933e.jar" />
-    </item>
-    <item
-        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.2.0/c0b52915a48fa91b1b94a28d4a2997bac5f524df/okio-1.2.0.jar"
+        jar="/Users/rory/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.2.0/c0b52915a48fa91b1b94a28d4a2997bac5f524df/okio-1.2.0.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="c0b52915a48fa91b1b94a28d4a2997bac5f524df">
-        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/okio-1.2.0-eafce49f8054242728f39ced86d70bb1ed298159.jar" />
+        <dex dex="/Users/rory/Documents/dev/Flare/app/build/intermediates/pre-dexed/debug/okio-1.2.0-4e16c3d4dc567c89425dc32e95a53a0f7730e598.jar" />
     </item>
     <item
-        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.9.0/a681c044244d9fc375198588297a39ba78028423/retrofit-1.9.0.jar"
+        jar="/Users/rory/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.2.0/959c454243581fdf730abfd4f4745441724bcf2c/okhttp-2.2.0.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="a681c044244d9fc375198588297a39ba78028423">
-        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/retrofit-1.9.0-1bba5c08d5f78c7dfb19902637c5eeca48ed0901.jar" />
+        sha1="959c454243581fdf730abfd4f4745441724bcf2c">
+        <dex dex="/Users/rory/Documents/dev/Flare/app/build/intermediates/pre-dexed/debug/okhttp-2.2.0-2656d2e2e82021aca4091f87b8a97a6e48136c68.jar" />
     </item>
     <item
-        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.2.0/cb20062e14c523637b7643295418097b48cccec2/okhttp-urlconnection-2.2.0.jar"
+        jar="/Users/rory/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.2.0/cb20062e14c523637b7643295418097b48cccec2/okhttp-urlconnection-2.2.0.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="cb20062e14c523637b7643295418097b48cccec2">
-        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/okhttp-urlconnection-2.2.0-53ad3ae79d8ffd6e64ae1f210acddb57fcdc227a.jar" />
+        <dex dex="/Users/rory/Documents/dev/Flare/app/build/intermediates/pre-dexed/debug/okhttp-urlconnection-2.2.0-d4a10ea7a29714d481d41ea48253e3f2a87f9040.jar" />
+    </item>
+    <item
+        jar="/Users/rory/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.9.0/a681c044244d9fc375198588297a39ba78028423/retrofit-1.9.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a681c044244d9fc375198588297a39ba78028423">
+        <dex dex="/Users/rory/Documents/dev/Flare/app/build/intermediates/pre-dexed/debug/retrofit-1.9.0-adf9969fdbbcc261ce7b25b62281df18bf2a1bed.jar" />
     </item>
 
 </items>

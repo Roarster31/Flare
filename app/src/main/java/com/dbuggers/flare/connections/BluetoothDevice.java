@@ -136,6 +136,8 @@ public class BluetoothDevice extends Device {
                 if(remoteGroupId == mDeviceInterface.getClientGroupId()){
                     Log.d(TAG,"going on to request server messages hash");
                     requestDeviceMessagesHash();
+                }else{
+                    disconnect();
                 }
 
             } else if(characteristic.getUuid().equals(BluetoothBroadcastAdapter.CHARACTERISTIC_MESSAGE_HASH_UUID)){
