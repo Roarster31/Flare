@@ -113,8 +113,8 @@ public class DataManager implements DeviceInterface {
 
         if(mBluetoothAdapter.getAddress().equals("EC:88:92:B9:86:76")){
             messages.add(new MessageEntry(1231301123, 56123, "heya"));
-//            messages.add(new MessageEntry(1231401123, 1231, "boo"));
-//            messages.add(new MessageEntry(1251301123, 56123, "ouch"));
+            messages.add(new MessageEntry(1231401123, 1231, "boo"));
+            messages.add(new MessageEntry(1251301123, 56123, "ouch"));
         }else{
             messages.add(new MessageEntry(1231301123, 56123, "heya"));
         }

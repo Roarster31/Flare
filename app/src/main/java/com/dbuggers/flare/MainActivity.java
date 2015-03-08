@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.dbuggers.flare.connections.DataManager;
 
-public class MainActivity extends Activity implements SignupFragment.SignupInterface, GroupMakerFragment.GroupMakerInterface, MessageFragment.MessageInterface {
+public class MainActivity extends Activity implements SignupFragment.SignupInterface, GroupMakerFragment.GroupMakerInterface, MessageFragment.MessageFragmentInterface{
     private NfcAdapter mNfcAdapter;
     private static final String TAG = "Interfaces";
     private DataManager dataManager;
