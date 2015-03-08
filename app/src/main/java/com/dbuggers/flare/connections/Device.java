@@ -1,36 +1,27 @@
 package com.dbuggers.flare.connections;
 
+import com.dbuggers.flare.models.MessageEntry;
 import com.dbuggers.flare.models.MessagesPayload;
-import com.dbuggers.flare.models.MinimalPayload;
+
+import java.util.List;
 
 /**
  * Created by rory on 07/03/15.
  */
 public abstract class Device {
-    private String currentHash;
-    private String macAddress;
+    protected final DeviceInterface mDeviceInterface;
 
-    private DeviceInterface mdeviceInterface;
+    public abstract void requestMessages();
 
-    public interface DeviceInterface {
-
-        public void onDataFetched(MessagesPayload response);
-        public void onHashUpdated(MinimalPayload response);
+    public Device (DeviceInterface deviceInterface){
+        mDeviceInterface = deviceInterface;
     }
 
-    public void setInterface(DeviceInterface mdeviceInterface) {
-        this.mdeviceInterface = mdeviceInterface;
-    }
-
-    public Device(String hash){
-        currentHash = hash;
-    }
-
-    public String getHash(){
-        return currentHash;
-    }
+    public abstract void disconnect();
 
     public abstract void fetchData(DeviceInterface deviceInterface);
 
     public abstract void sendData(MessagesPayload payload);
+
+    public abstract void updateMessages(List<MessageEntry> list);
 }

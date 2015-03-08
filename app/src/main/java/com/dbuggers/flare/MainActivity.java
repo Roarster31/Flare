@@ -1,20 +1,23 @@
 package com.dbuggers.flare;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.Button;
+
+import com.dbuggers.flare.connections.DataManager;
 
 
 public class MainActivity extends Activity {
+
+    private DataManager dataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,23 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+
+        dataManager = new DataManager(this, DataManager.ConnectionType.BLUETOOTH);
+        dataManager.setGroupId(4543456);
+
+        dataManager.startServices();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        dataManager.handleOnActivityResult(requestCode,resultCode,data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dataManager.kill();
     }
 
     /**
