@@ -117,7 +117,7 @@ public class SignupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
+        //clearSettingsFile();
         // Check to see if user already exists
         readSettingsFile();
 
@@ -287,7 +287,7 @@ public class SignupFragment extends Fragment {
             }else{
                 throw new IllegalStateException(getActivity().getClass().getName()+" must implement SignupInterface");
             }
-            
+
             signupInterface.onSignupClicked();
         } else {
             Log.v(TAG, "Settings File is empty");
