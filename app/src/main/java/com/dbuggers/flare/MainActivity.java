@@ -4,26 +4,11 @@ package com.dbuggers.flare;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-<<<<<<< HEAD
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.NfcEvent;
-=======
->>>>>>> 2d78352b4445bdf639844d1602ae2667b104f94e
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
-<<<<<<< HEAD
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-=======
 
 import com.dbuggers.flare.connections.DataManager;
->>>>>>> 2d78352b4445bdf639844d1602ae2667b104f94e
-
 
 public class MainActivity extends Activity implements SignupFragment.SignupInterface, GroupMakerFragment.GroupMakerInterface, MessageFragment.MessageInterface {
     private NfcAdapter mNfcAdapter;
