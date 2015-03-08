@@ -5,5 +5,5 @@ package com.dbuggers.flare.connections;
  */
 public interface BluetoothDiscoveryListener {
 
-    public void onBluetoothDeviceGroupIdKnown(BluetoothDevice device);
+    public void onDisconnected();
 }

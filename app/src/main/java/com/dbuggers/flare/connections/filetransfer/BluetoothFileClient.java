@@ -57,6 +57,7 @@ public class BluetoothFileClient {
                 try {
                     connectException.printStackTrace();
                     Log.e(TAG, "closing socket!");
+                    mTransferInterface.onError();
                     mmSocket.close();
                 } catch (IOException closeException) { }
                 return;

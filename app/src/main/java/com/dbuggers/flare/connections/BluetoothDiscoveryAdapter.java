@@ -26,7 +26,7 @@ import java.util.Map;
  * compares hashes of all the messages. If the hashes are equal then we do nothing, but who should
  * control this logic?
  */
-public class BluetoothDiscoveryAdapter extends DiscoveryAdapter {
+public class BluetoothDiscoveryAdapter extends DiscoveryAdapter implements BluetoothDiscoveryListener {
 
     private static final String TAG = "BluetoothDiscoveryAdapter";
     private static final long CLEAN_SCAN_INTERVAL = 4000;
@@ -124,7 +124,7 @@ public class BluetoothDiscoveryAdapter extends DiscoveryAdapter {
                     Log.e(TAG, "hashes not not equal: " + new String(hash) + " != " + new String(messagesHash));
                     stopScan();
 
-                    final BluetoothDevice device = new BluetoothDevice(mDeviceInterface);
+                    final BluetoothDevice device = new BluetoothDevice(mDeviceInterface, BluetoothDiscoveryAdapter.this);
 
 //                     final Handler handler = new Handler();
 //
@@ -169,4 +169,8 @@ public class BluetoothDiscoveryAdapter extends DiscoveryAdapter {
         }
     };
 
+    @Override
+    public void onDisconnected() {
+        scan();
+    }
 }

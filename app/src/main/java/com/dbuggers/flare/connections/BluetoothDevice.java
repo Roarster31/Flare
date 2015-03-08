@@ -28,6 +28,7 @@ public class BluetoothDevice extends Device {
 
 
     private static final String TAG = "BluetoothDevice";
+    private final BluetoothDiscoveryListener mDiscoveryListener;
     private BluetoothGatt mCurrentBluetoothSession;
     private BluetoothAdapter mBluetoothAdapter;
     private boolean connected;
@@ -37,8 +38,9 @@ public class BluetoothDevice extends Device {
 
     private byte[] mMessageTransferMethod;
 
-    public BluetoothDevice(DeviceInterface deviceInterface) {
+    public BluetoothDevice(DeviceInterface deviceInterface, BluetoothDiscoveryListener discoveryListener) {
         super(deviceInterface);
+        mDiscoveryListener = discoveryListener;
     }
 
     @Override
@@ -89,6 +91,7 @@ public class BluetoothDevice extends Device {
             mCurrentBluetoothSession.disconnect();
             mCurrentBluetoothSession = null;
         }
+        mDiscoveryListener.onDisconnected();
     }
     private BluetoothGattCallback mCallback = new BluetoothGattCallback() {
         @Override
@@ -97,6 +100,7 @@ public class BluetoothDevice extends Device {
             if(newState == BluetoothProfile.STATE_DISCONNECTED){
                 connected = false;
                 Log.i(TAG,"disconnected");
+                mDiscoveryListener.onDisconnected();
             }else if(newState == BluetoothProfile.STATE_CONNECTING){
                 Log.i(TAG,"connecting");
             }else if(newState == BluetoothProfile.STATE_CONNECTED){

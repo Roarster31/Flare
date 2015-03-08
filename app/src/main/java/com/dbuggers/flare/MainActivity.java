@@ -35,10 +35,8 @@ public class MainActivity extends Activity implements SignupFragment.SignupInter
                     .commit();
         }
 
-        dataManager = new DataManager(this, DataManager.ConnectionType.HTTP);
-        dataManager.setGroupId(4543456);
+        dataManager = new DataManager(this, DataManager.ConnectionType.BLUETOOTH);
 
-        dataManager.startServices();
     }
 
     @Override
@@ -77,6 +75,10 @@ public class MainActivity extends Activity implements SignupFragment.SignupInter
                 .setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
                 .replace(R.id.container, new MessageFragment())
                 .commit();
+
+        dataManager.startServices();
+
+
     }
 
     @Override
