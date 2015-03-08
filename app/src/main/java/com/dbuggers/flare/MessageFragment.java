@@ -160,16 +160,16 @@ public class MessageFragment extends Fragment implements DataManager.DataUpdateL
 
             View rowView;
             if(entry.getUserId() == mMessageFragmentInterface.getDataManager().getUserId()) {
-                rowView = inflater.inflate(R.layout.row_layout_user, parent, false);
+                //rowView = inflater.inflate(R.layout.row_layout_user, parent, false);
             }else{
-                rowView = inflater.inflate(R.layout.row_layout_else, parent, false);
+                //rowView = inflater.inflate(R.layout.row_layout_else, parent, false);
 
             }
 
-            TextView messageTextview = (TextView) rowView.findViewById(R.id.message);
-            messageTextview.setText(entry.getMessage());
+            //TextView messageTextview = (TextView) rowView.findViewById(R.id.message);
+          //  messageTextview.setText(entry.getMessage());
 
-            return rowView;
+            return null;
         }
     }
 

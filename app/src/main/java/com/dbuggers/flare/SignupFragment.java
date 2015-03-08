@@ -117,7 +117,7 @@ public class SignupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        //clearSettingsFile();
+        clearSettingsFile();
         // Check to see if user already exists
         readSettingsFile();
 
@@ -186,9 +186,9 @@ public class SignupFragment extends Fragment {
                             typedImage,
                             new SignupRequest.SignupRequestListener() {
                                 @Override
-                                public void onSignedUp() {
+                                public void onSignedUp(String id) {
                                     // Save the details into a file
-                                    createSettingsFile();
+                                    createSettingsFile(id);
                                     // Make a transition
                                     signupInterface.onSignupClicked();
                                 }
@@ -258,7 +258,7 @@ public class SignupFragment extends Fragment {
 
     }
 
-    private void createSettingsFile() {
+    private void createSettingsFile(String id) {
         Context context = getActivity();
         SharedPreferences sharedPref = context.getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -272,6 +272,8 @@ public class SignupFragment extends Fragment {
         editor.putString("nameTextValue", nameTextValue);
         editor.putString("bioTextValue", bioTextValue);
         editor.putString("numTextValue", numTextValue);
+        editor.putString("userId", id);
+        Log.v(TAG, "User ID = " + id);
         Log.v(TAG,"Updated settings file");
         editor.commit();
     }
@@ -285,7 +287,7 @@ public class SignupFragment extends Fragment {
 
         if(nameText != null && !nameText.equals("")){
 
-            Log.v(TAG, "Settings File has values will move frags: " + nameText);
+            Log.v(TAG, "Settings File has values will move frags: " + nameText + sharedPref.getString("userId",null));
             if(getActivity() instanceof SignupInterface){
                 signupInterface = (SignupInterface) getActivity();
             }else{
@@ -298,7 +300,7 @@ public class SignupFragment extends Fragment {
         }
     }
     public void clearSettingsFile(){
-
+        Log.v("CLEAR", "Clearing Settings");
         SharedPreferences sharedPref = getActivity().getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

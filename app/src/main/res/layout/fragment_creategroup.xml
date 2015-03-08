@@ -31,23 +31,39 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bump to create or join a group"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Create A Group"
+                    android:id="@+id/textView2"
+                    android:theme="@android:style/TextAppearance.DeviceDefault.Widget.ActionMode.Title"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:textSize="40dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="285dp"
+                    android:id="@+id/qrCodeImg"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Or"
                     android:id="@+id/textView"
-                    android:layout_gravity="center_vertical"
-                    android:textAlignment="center"
-                    android:textSize="40dp"
-                    android:textStyle="bold"
-                    android:typeface="sans"
-                    android:shadowColor="#ffff2a37"
-                    android:gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:textSize="40dp" />
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Move to Next"
-                    android:id="@+id/nextBtn" />
+                    android:text="Scan Code"
+                    android:id="@+id/scanBtn"
+                    android:theme="@style/zxing_CaptureTheme" />
             </LinearLayout>
 
         </LinearLayout>

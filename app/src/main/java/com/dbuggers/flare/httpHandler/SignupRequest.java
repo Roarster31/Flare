@@ -26,7 +26,7 @@ public class SignupRequest {
     private final SignupRequestListener mListener;
 
     public interface SignupRequestListener {
-        public void onSignedUp();
+        public void onSignedUp(String id);
         public void onInternetError();
         public void onUserExistsAlready();
         public void onInvalidResponse();
@@ -59,7 +59,8 @@ public class SignupRequest {
                 } else if(s.error.equals("0")){
                     Log.v(finalTAG,"All ok");
                     Log.v(finalTAG, s.errorMessage);
-                    mListener.onSignedUp();
+                    Log.v(finalTAG, "ID=" + s.id);
+                    mListener.onSignedUp(s.id);
 
                 } else {
                     Log.v(finalTAG,"No Valid Response");
@@ -88,5 +89,6 @@ interface HTTPService {
 class JsonModel {
     public String errorMessage;
     public String error;
+    public String id;
 
 }
