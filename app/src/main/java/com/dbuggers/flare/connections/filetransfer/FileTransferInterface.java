@@ -7,4 +7,5 @@ import android.bluetooth.BluetoothSocket;
  */
 public interface FileTransferInterface {
     public void onSocketReady(BluetoothSocket socket);
+    public void onError();
 }

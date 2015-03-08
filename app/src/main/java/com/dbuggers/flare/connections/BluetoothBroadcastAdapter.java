@@ -29,7 +29,6 @@ public class BluetoothBroadcastAdapter extends BroadcastAdapter {
     public static final UUID SERVICE_UUID = UUID.fromString("1706BBC0-88AB-4B8D-877E-2237916EE929");
     public static final UUID CHARACTERISTIC_GROUP_ID_UUID = UUID.fromString("20033A23-F091-4903-AFFA-C652CCE7E220");
     public static final UUID CHARACTERISTIC_MESSAGE_HASH_UUID = UUID.fromString("D7D2C1BE-C6AA-4487-A288-C19B7508D1DE");
-    public static final ParcelUuid CHARACTERISTIC_MESSAGE_HASH_UUID_PARCELED = ParcelUuid.fromString("D7D2C1BE-C6AA-4487-A288-C19B7508D1DE");
     public static final UUID CHARACTERISTIC_MAC_ADDRESS_UUID = UUID.fromString("0FFE3A4C-BC25-4F47-97A7-C95B0CB11C9E");
     public static final UUID CHARACTERISTIC_SEND_MESSAGELIST_UUID = UUID.fromString("5C6A2A30-3FCF-4EDB-AC17-AF9EE6955AB1");
     private static final String TAG = "BluetoothBroadcastAdapter";
@@ -46,9 +45,6 @@ public class BluetoothBroadcastAdapter extends BroadcastAdapter {
 
     @Override
     public void beginBroadcast() {
-
-        mGattServer = mBluetoothManager.openGattServer(mContext, mGattServerCallback);
-        mBluetoothLeAdvertiser = mBluetoothManager.getAdapter().getBluetoothLeAdvertiser();
 
         initServer();
         startAdvertising();
@@ -69,6 +65,10 @@ public class BluetoothBroadcastAdapter extends BroadcastAdapter {
     }
 
     private void initServer() {
+
+        mGattServer = mBluetoothManager.openGattServer(mContext, mGattServerCallback);
+        mBluetoothLeAdvertiser = mBluetoothManager.getAdapter().getBluetoothLeAdvertiser();
+
         BluetoothGattService service = new BluetoothGattService(SERVICE_UUID,
                 BluetoothGattService.SERVICE_TYPE_PRIMARY);
 
@@ -111,6 +111,13 @@ public class BluetoothBroadcastAdapter extends BroadcastAdapter {
         mGattServer.addService(service);
     }
 
+    public void restartAdvertising() {
+        if (mBluetoothLeAdvertiser == null) return;
+
+        mBluetoothLeAdvertiser.stopAdvertising(mAdvertiseCallback);
+        startAdvertising();
+    }
+
     private void startAdvertising() {
         if (mBluetoothLeAdvertiser == null) return;
 
@@ -132,7 +139,7 @@ public class BluetoothBroadcastAdapter extends BroadcastAdapter {
 
             data = new AdvertiseData.Builder()
 //                    .setIncludeDeviceName(true)
-                    .addServiceData(CHARACTERISTIC_MESSAGE_HASH_UUID_PARCELED, shortened)
+                    .addServiceData(new ParcelUuid(CHARACTERISTIC_MESSAGE_HASH_UUID), shortened)
                     .addServiceUuid(new ParcelUuid(SERVICE_UUID))
                     .build();
             mBluetoothLeAdvertiser.startAdvertising(settings, data, mAdvertiseCallback);
@@ -268,12 +275,19 @@ public class BluetoothBroadcastAdapter extends BroadcastAdapter {
                         public void onBytesReceived(byte[] bytes) {
                             try {
                                 mDeviceInterface.onNewMessagesReceived(MessageHasher.deserializeMessageList(bytes));
+                                restartAdvertising();
                             } catch (IOException | ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
                         }
                     });
                 }
+            }
+
+            @Override
+            public void onError() {
+                stopBroadcast();
+                beginBroadcast();
             }
         });
     }

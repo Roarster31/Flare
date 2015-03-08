@@ -52,6 +52,9 @@ public class BluetoothFileServer {
                     socket = mmServerSocket.accept();
                 } catch (IOException e) {
                     break;
+                } catch (NullPointerException e){
+                    mTransferInterface.onError();
+                    break;
                 }
                 // If a connection was accepted
                 if (socket != null) {

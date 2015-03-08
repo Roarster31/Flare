@@ -15,7 +15,6 @@ import com.dbuggers.flare.connections.filetransfer.BluetoothSocketWorker;
 import com.dbuggers.flare.connections.filetransfer.FileTransferInterface;
 import com.dbuggers.flare.helpers.MessageHasher;
 import com.dbuggers.flare.models.MessageEntry;
-import com.dbuggers.flare.models.MessagesPayload;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -29,21 +28,17 @@ public class BluetoothDevice extends Device {
 
 
     private static final String TAG = "BluetoothDevice";
-    private String LeMacAddress;
     private BluetoothGatt mCurrentBluetoothSession;
     private BluetoothAdapter mBluetoothAdapter;
-    private String realBluetoothMacAddress;
+    private boolean connected;
 
+
+    private String realBluetoothMacAddress;
 
     private byte[] mMessageTransferMethod;
 
-    public BluetoothDevice(DeviceInterface deviceInterface, android.bluetooth.BluetoothDevice device) {
+    public BluetoothDevice(DeviceInterface deviceInterface) {
         super(deviceInterface);
-        this.LeMacAddress = device.getAddress();
-    }
-
-    public String getLeMacAddress() {
-        return LeMacAddress;
     }
 
     @Override
@@ -62,9 +57,13 @@ public class BluetoothDevice extends Device {
 
     }
 
-    public void connect(Context context, BluetoothAdapter bluetoothAdapter) {
+    public void connect(Context context, BluetoothAdapter bluetoothAdapter, android.bluetooth.BluetoothDevice device) {
         mBluetoothAdapter = bluetoothAdapter;
-        mCurrentBluetoothSession = mBluetoothAdapter.getRemoteDevice(getLeMacAddress()).connectGatt(context, false, mCallback);
+        Log.d(TAG,"connect " + device.getAddress());
+
+        mCurrentBluetoothSession = device.connectGatt(context, false, mCallback);
+
+        mCurrentBluetoothSession.discoverServices();
     }
 
     @Override
@@ -96,12 +95,14 @@ public class BluetoothDevice extends Device {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             Log.d(TAG,"onConnectionStateChange status: "+status+" newState: "+newState);
             if(newState == BluetoothProfile.STATE_DISCONNECTED){
+                connected = false;
                 Log.i(TAG,"disconnected");
             }else if(newState == BluetoothProfile.STATE_CONNECTING){
                 Log.i(TAG,"connecting");
             }else if(newState == BluetoothProfile.STATE_CONNECTED){
                 Log.i(TAG,"connected");
-                gatt.discoverServices();
+                connected = true;
+                mCurrentBluetoothSession.discoverServices();
             }else if(newState == BluetoothProfile.STATE_DISCONNECTING){
                 Log.i(TAG,"disconnecting");
             }
@@ -250,6 +251,16 @@ public class BluetoothDevice extends Device {
                     });
                 }
             }
+
+            @Override
+            public void onError() {
+                disconnect();
+            }
         });
     }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
 }

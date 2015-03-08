@@ -84,7 +84,17 @@ public class DataManager implements DeviceInterface {
 
 
     public void sendMessage(String message) {
+        for (DiscoveryAdapter discoveryAdapter : mDiscoveryAdapterList) {
+            discoveryAdapter.scan();
+        }
+
         messages.add(new MessageEntry(System.currentTimeMillis(), userId, message));
+
+        for (BroadcastAdapter broadcastAdapter : mBroadcastAdapterList) {
+            if(broadcastAdapter instanceof BluetoothBroadcastAdapter){
+                ((BluetoothBroadcastAdapter)broadcastAdapter).restartAdvertising();
+            }
+        }
     }
 
     public int getUserId() {
@@ -143,13 +153,14 @@ public class DataManager implements DeviceInterface {
     }
 
     public void startServices(){
-        for(DiscoveryAdapter discoveryAdapter : mDiscoveryAdapterList){
-            discoveryAdapter.scan();
-        }
 
-        for(BroadcastAdapter broadcastAdapter : mBroadcastAdapterList){
-            broadcastAdapter.beginBroadcast();
-        }
+            for (DiscoveryAdapter discoveryAdapter : mDiscoveryAdapterList) {
+                discoveryAdapter.scan();
+            }
+
+            for (BroadcastAdapter broadcastAdapter : mBroadcastAdapterList) {
+                broadcastAdapter.beginBroadcast();
+            }
     }
 
     public void setGroupId(int id){

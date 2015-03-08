@@ -8,6 +8,7 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.os.ParcelUuid;
 import android.util.Log;
 
@@ -16,7 +17,6 @@ import com.dbuggers.flare.helpers.MessageHasher;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +29,10 @@ import java.util.Map;
 public class BluetoothDiscoveryAdapter extends DiscoveryAdapter {
 
     private static final String TAG = "BluetoothDiscoveryAdapter";
+    private static final long CLEAN_SCAN_INTERVAL = 4000;
     private final BluetoothLeScanner mBluetoothScanner;
     private final BluetoothAdapter mBluetoothAdapter;
-
+    private final Handler mHandler;
 
 
     public BluetoothDiscoveryAdapter(Context context, BluetoothAdapter bluetoothAdapter, DeviceInterface deviceInterface) {
@@ -39,15 +40,17 @@ public class BluetoothDiscoveryAdapter extends DiscoveryAdapter {
 
         mBluetoothAdapter = bluetoothAdapter;
 
-        if(!bluetoothAdapter.isEnabled()){
+        if (!bluetoothAdapter.isEnabled()) {
             throw new IllegalStateException("Please make sure bluetooth is enabled before trying to setup");
         }
 
-        if(!mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)){
+        if (!mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             throw new IllegalStateException("Device does not support bluetooth LE!!");
-        }else {
+        } else {
             mBluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
         }
+
+        mHandler = new Handler();
 
     }
 
@@ -60,6 +63,7 @@ public class BluetoothDiscoveryAdapter extends DiscoveryAdapter {
     @Override
     public void scan() {
 
+        scanWasClean = false;
         //Scan for devices advertising our custom service
         ScanFilter scanFilter = new ScanFilter.Builder()
                 .setServiceUuid(new ParcelUuid(BluetoothBroadcastAdapter.SERVICE_UUID))
@@ -73,49 +77,90 @@ public class BluetoothDiscoveryAdapter extends DiscoveryAdapter {
         mBluetoothAdapter.getBluetoothLeScanner().startScan(filters, settings, mScanCallback);
     }
 
+    private boolean scanWasClean;
+    private Runnable mScanRunnable = new Runnable() {
+        @Override
+        public void run() {
+          if(scanWasClean){
+              stopScan();
+              scan();
+          }
+        }
+    };
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-            processDevice(result);
+            mHandler.removeCallbacks(mScanRunnable);
+            scanWasClean = processDevice(result);
+            mHandler.postDelayed(mScanRunnable, CLEAN_SCAN_INTERVAL);
         }
 
-        private void processDevice(ScanResult result) {
+        /**
+         *
+         * @param result
+         * @return true if the device was processed rather than skipped
+         */
+        private boolean processDevice(final ScanResult result) {
 
 
+            byte[] messagesHash = null;
 
             Iterator it = result.getScanRecord().getServiceData().entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
+                Map.Entry pair = (Map.Entry) it.next();
                 ParcelUuid uuid = (ParcelUuid) pair.getKey();
                 byte[] bytes = (byte[]) pair.getValue();
-                Log.d(TAG,"uuid: "+uuid+" byte length: "+bytes.length);
+                messagesHash = bytes;
+                Log.d(TAG, "uuid: " + uuid + " byte length: " + bytes.length);
                 it.remove(); // avoids a ConcurrentModificationException
             }
 
+            try {
+                byte[] hash = MessageHasher.hash(mDeviceInterface.getMessagesList());
+                if (messagesHash != null && MessageHasher.doMatch(hash, messagesHash)) {
+                    Log.e(TAG, "We're not getting involved with " + result.getDevice().getAddress() + " because its hash is up to date");
+                    return true;
+                } else {
+                    Log.e(TAG, "hashes not not equal: " + new String(hash) + " != " + new String(messagesHash));
+                    stopScan();
 
-//            byte[] messagesHash = result.getScanRecord().getServiceData().getServiceData(BluetoothBroadcastAdapter.CHARACTERISTIC_MESSAGE_HASH_UUID_PARCELED);
+                    final BluetoothDevice device = new BluetoothDevice(mDeviceInterface);
 
-            //we're a bit sneaky here and discount a device if it's hash is the same as ours
-            //we should really let DataManager do this for us
-//            try {
-//                if(MessageHasher.doMatch(MessageHasher.hash(mDeviceInterface.getMessagesList()), messagesHash)){
-//                    Log.e(TAG, "We're not getting involved with " + result.getDevice().getAddress() + " because its hash is up to date");
-//                    return;
-//                }
+//                     final Handler handler = new Handler();
 //
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (NoSuchAlgorithmException e) {
-//                e.printStackTrace();
-//            }
-            new BluetoothDevice(mDeviceInterface, result.getDevice()).connect(mContext, mBluetoothAdapter);
+//                    final Runnable t = new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if(!device.isConnected()) {
+//                                device.connect(mContext, mBluetoothAdapter, result.getDevice());
+//                                handler.postDelayed(this,1000);
+//                            }
+//                        }
+//                    };
+//                     handler.postDelayed(t,1000);
+
+                    device.connect(mContext, mBluetoothAdapter, result.getDevice());
+                    return false;
+//                    handler.postDelayed(this,1000);
+
+                }
+            } catch (IOException | NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            return true;
         }
 
         @Override
         public void onBatchScanResults(List<ScanResult> results) {
-            for(ScanResult result : results){
-                processDevice(result);
+            scanWasClean = true;
+            for (ScanResult result : results) {
+                if(processDevice(result)){
+                    scanWasClean = false;
+                }
             }
+            scanWasClean = true;
+            mHandler.postDelayed(mScanRunnable, CLEAN_SCAN_INTERVAL);
+            stopScan();
         }
 
         @Override

@@ -75,7 +75,7 @@ public class MessageEntry implements Comparable, Serializable{
     public int compareTo(Object another) {
         if(another != null && another instanceof MessageEntry){
             MessageEntry otherMessage = (MessageEntry) another;
-            return Long.compare(otherMessage.getTime(), getTime());
+            return Long.compare(getTime(), otherMessage.getTime());
         }else{
             return 0;
         }

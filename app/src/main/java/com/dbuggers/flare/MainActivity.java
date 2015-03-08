@@ -31,7 +31,7 @@ public class MainActivity extends Activity implements SignupFragment.SignupInter
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new SignupFragment())
+                    .add(R.id.container, new MessageFragment())
                     .commit();
         }
 
