@@ -2,6 +2,13 @@
 <items version="2" >
 
     <item
+        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/net.glxn.qrgen/android/2.0/e193fae1a38d614a6cd2a2cc6d5cc4fb63ca6732/android-2.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e193fae1a38d614a6cd2a2cc6d5cc4fb63ca6732">
+        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/android-2.0-91d01383d299acc1ed34bc63302c485e9b484b06.jar" />
+    </item>
+    <item
         jar="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.2.2/classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -9,11 +16,18 @@
         <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/classes-7b8b08889fb2635f8edefcc5ffbc45609bd0811a.jar" />
     </item>
     <item
-        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jar="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/exploded-aar/com.journeyapps/zxing-android-integration/2.0.1/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
-        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/gson-2.3.1-d30706150a43be9e4e61e784ef867e65663c2517.jar" />
+        sha1="d4d7d4290dc3f13bdb95a92b2377d78e66084dfa">
+        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/classes-7b343e5d219d80e8d6bf45e2b5df6edd5924664c.jar" />
+    </item>
+    <item
+        jar="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/exploded-aar/com.journeyapps/zxing-android-legacy/2.0.1/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7eb68150c290a271a716675ebdfd176eac694124">
+        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/classes-09a187dc108eb05439efbe2d33dc59ba8aa90305.jar" />
     </item>
     <item
         jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.2.0/959c454243581fdf730abfd4f4745441724bcf2c/okhttp-2.2.0.jar"
@@ -23,6 +37,34 @@
         <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/okhttp-2.2.0-19844d991073bb23a33407c4e517751dadc7933e.jar" />
     </item>
     <item
+        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.9.0/a681c044244d9fc375198588297a39ba78028423/retrofit-1.9.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a681c044244d9fc375198588297a39ba78028423">
+        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/retrofit-1.9.0-1bba5c08d5f78c7dfb19902637c5eeca48ed0901.jar" />
+    </item>
+    <item
+        jar="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/exploded-aar/com.journeyapps/zxing-android-embedded/2.0.1/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="f38c1fe0ee3d0ef717e7f32131719fccf07fd6c7">
+        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/classes-2e3c1123b01e86eda9df3d9f341a22e4f91d8371.jar" />
+    </item>
+    <item
+        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/gson-2.3.1-d30706150a43be9e4e61e784ef867e65663c2517.jar" />
+    </item>
+    <item
+        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.google.zxing/core/3.1.0/908e18674f895e3e1fa8f4a954b8c637a23d2801/core-3.1.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="908e18674f895e3e1fa8f4a954b8c637a23d2801">
+        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/core-3.1.0-ab1ddcc45d61add282b32875c9b2b25eb532e97e.jar" />
+    </item>
+    <item
         jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.2.0/c0b52915a48fa91b1b94a28d4a2997bac5f524df/okio-1.2.0.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -30,11 +72,11 @@
         <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/okio-1.2.0-eafce49f8054242728f39ced86d70bb1ed298159.jar" />
     </item>
     <item
-        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.9.0/a681c044244d9fc375198588297a39ba78028423/retrofit-1.9.0.jar"
+        jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/net.glxn.qrgen/core/2.0/a4768205c0fa814b35374bb26586900d0ef8d4fe/core-2.0.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="a681c044244d9fc375198588297a39ba78028423">
-        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/retrofit-1.9.0-1bba5c08d5f78c7dfb19902637c5eeca48ed0901.jar" />
+        sha1="a4768205c0fa814b35374bb26586900d0ef8d4fe">
+        <dex dex="/Users/benallen/Documents/Apps/Flare/Flare/app/build/intermediates/pre-dexed/debug/core-2.0-dda92bf5cc232ec66f2185a6d9afdef05dd7e538.jar" />
     </item>
     <item
         jar="/Users/benallen/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.2.0/cb20062e14c523637b7643295418097b48cccec2/okhttp-urlconnection-2.2.0.jar"
