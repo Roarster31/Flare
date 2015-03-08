@@ -64,11 +64,12 @@ public class GroupMakerFragment extends Fragment {
         });
         long currentTime = System.currentTimeMillis();
         gId = currentTime;
+        uId = Integer.parseInt(readUserId());
         Bitmap bmp = QRCode.from(String.valueOf(currentTime)).bitmap();
         ImageView myImage = (ImageView) rootView.findViewById(R.id.qrCodeImg);
         myImage.setImageBitmap(bmp);
 
-        mDataManagerInterface.getDataManager().setUserId(Integer.parseInt(readUserId()));
+        mDataManagerInterface.getDataManager().setUserId(uId);
 
         return rootView;
     }
@@ -156,6 +157,7 @@ public class GroupMakerFragment extends Fragment {
 
         // Get field values
         String userId = sharedPref.getString("userId", null);
+        Log.v(TAG, "User Id "+  userId);
         return userId;
 
     }
