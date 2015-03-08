@@ -36,7 +36,6 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Create A Group"
                     android:id="@+id/textView2"
-                    android:theme="@android:style/TextAppearance.DeviceDefault.Widget.ActionMode.Title"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20dp"
                     android:textSize="40dp" />

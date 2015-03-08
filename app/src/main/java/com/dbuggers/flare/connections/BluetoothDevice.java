@@ -47,16 +47,6 @@ public class BluetoothDevice extends Device {
     }
 
     @Override
-    public void fetchData(DeviceInterface deviceInterface) {
-
-    }
-
-    @Override
-    public void sendData(MessagesPayload payload) {
-
-    }
-
-    @Override
     public void updateMessages(List<MessageEntry> list) {
 
         BluetoothGattCharacteristic characteristic = mCurrentBluetoothSession

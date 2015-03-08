@@ -2,9 +2,13 @@ package com.dbuggers.flare.connections;
 
 import android.util.Log;
 
+import com.dbuggers.flare.helpers.MessageHasher;
 import com.dbuggers.flare.models.MessageEntry;
 import com.dbuggers.flare.models.MessagesPayload;
+import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +19,7 @@ import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 import retrofit.http.GET;
 import retrofit.http.Query;
 
@@ -23,16 +28,21 @@ import retrofit.http.Query;
  */
 public class HTTPDevice extends Device {
     private static final String TAG = "HttpDevice";
-    private static String mGroupId;
     private List<MessageEntry> messageEntries;
-    public HTTPDevice(DeviceInterface deviceInterface, String groupId) {
+    public HTTPDevice(DeviceInterface deviceInterface) {
         super(deviceInterface);
-        mGroupId = groupId;
+        retrieveAllData();
+
     }
 
     @Override
     public void requestMessages() {
+        if(messageEntries != null){
+            mDeviceInterface.onServerMessagesReceived(messageEntries, this);
+        }
+    }
 
+    private void retrieveAllData() {
         Log.v(TAG, "Requesting Messages");
         MessagesHTTPService service;
         RestAdapter restAdapter;
@@ -42,7 +52,7 @@ public class HTTPDevice extends Device {
 
         service = restAdapter.create(MessagesHTTPService.class);
 
-        service.listData(mGroupId, new Callback<List<JSONMessage>>() {
+        service.listData(mDeviceInterface.getClientGroupId(), new Callback<List<JSONMessage>>() {
             @Override
             public void success(List<JSONMessage> jsonMessages, Response response) {
                 Log.v(TAG, "Response success!");
@@ -57,19 +67,12 @@ public class HTTPDevice extends Device {
                         if (temp != null) {
                             messageEntries.add(temp);
                         }
-                       /* SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-                        Date d = null;
+
                         try {
-                            d = f.parse(j.date);
-                            long milliseconds = d.getTime();
-                            MessageEntry temp = new MessageEntry(milliseconds, Integer.valueOf(j.uid), j.msg);
-                            Log.v(TAG, temp.toString() + " ");
-                            if (temp != null) {
-                                messageEntries.add(temp);
-                            }
-                        } catch (ParseException e) {
+                            mDeviceInterface.onHashReceived(HTTPDevice.this, MessageHasher.hash(messageEntries));
+                        } catch (IOException | NoSuchAlgorithmException e) {
                             e.printStackTrace();
-                        }*/
+                        }
 
                     }
                 }
@@ -88,13 +91,10 @@ public class HTTPDevice extends Device {
 
     }
 
-    @Override
-    public void fetchData(DeviceInterface deviceInterface) {
-
-    }
 
     @Override
-    public void sendData(MessagesPayload payload) {
+    public void updateMessages(List<MessageEntry> list) {
+
         Log.v(TAG, "Sending Messages");
         SendHTTPMessage service;
         RestAdapter restAdapter;
@@ -103,20 +103,8 @@ public class HTTPDevice extends Device {
                 .build();
 
         service = restAdapter.create(SendHTTPMessage.class);
-        String jsonMessages= "[";
-        List<MessageEntry> messages = payload.getMessages();
-        int i = 0;
-        for (MessageEntry m : messages){
-            if (i > 0){
-                jsonMessages += ",";
-            }
-            //[{"mid":"1","date":"2015-03-06 23:36:33","msg":"Hello World","uid":"23894"},{"mid":"2","date":"2015-03-08 04:19:05","msg":"Hello!!","uid":"14234"}]
-            jsonMessages += "{" + "\"date\":\"" + m.getTime() + "\", \"msg\":\"" + m.getMessage() + "\",\"uid\":\"" + m.getUserId() + "\"}";
-            i++;
-        }
-        jsonMessages += "]";
-        Log.v(TAG, "Msg: " + jsonMessages);
-        service.listData(String.valueOf(payload.getGroupId()), jsonMessages, new Callback<String>() {
+
+        service.listData(list, new Callback<String>() {
             @Override
             public void success(String result, Response response) {
                 Log.v(TAG, "Send success!");
@@ -129,10 +117,6 @@ public class HTTPDevice extends Device {
 
             }
         });
-    }
-
-    @Override
-    public void updateMessages(List<MessageEntry> list) {
 
     }
     public List<MessageEntry> getMessages(){
@@ -141,11 +125,11 @@ public class HTTPDevice extends Device {
 }
 interface SendHTTPMessage {
     @GET("/addMessages.php")
-    void listData(@Query("gid") String gid,@Query("data") String data,Callback<String> cb);
+    void listData(@Query("data") List<MessageEntry> messageEntries,Callback<String> cb);
 }
 interface MessagesHTTPService {
     @GET("/readMessages.php")
-    void listData(@Query("gid") String gid,Callback<List<JSONMessage>> cb);
+    void listData(@Query("gid") int gid,Callback<List<JSONMessage>> cb);
 }
 class JSONMessage {
     public String date;

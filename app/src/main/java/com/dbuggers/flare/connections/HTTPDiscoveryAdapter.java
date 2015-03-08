@@ -18,6 +18,6 @@ public class HTTPDiscoveryAdapter extends DiscoveryAdapter {
 
     @Override
     public void scan() {
-
+        HTTPDevice device = new HTTPDevice(mDeviceInterface);
     }
 }

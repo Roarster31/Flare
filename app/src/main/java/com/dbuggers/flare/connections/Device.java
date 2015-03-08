@@ -19,9 +19,5 @@ public abstract class Device {
 
     public abstract void disconnect();
 
-    public abstract void fetchData(DeviceInterface deviceInterface);
-
-    public abstract void sendData(MessagesPayload payload);
-
     public abstract void updateMessages(List<MessageEntry> list);
 }

@@ -81,6 +81,8 @@ public class GroupMakerFragment extends Fragment {
     public interface GroupMakerInterface {
         public void onGroupJoin();
     }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
     Log.v(TAG, "Activity Valled");
         if (requestCode == 0) {

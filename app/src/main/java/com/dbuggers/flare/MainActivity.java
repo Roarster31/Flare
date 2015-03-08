@@ -34,54 +34,6 @@ public class MainActivity extends Activity implements SignupFragment.SignupInter
                     .add(R.id.container, new SignupFragment())
                     .commit();
         }
-        HTTPDevice n = new HTTPDevice(new DeviceInterface() {
-            @Override
-            public void onHashReceived(Device serverDevice, byte[] messagesHash) {
-
-            }
-
-            @Override
-            public void onServerMessagesReceived(List<MessageEntry> messages, Device serverDevice) {
-
-            }
-
-            @Override
-            public void onNewMessagesReceived(List<MessageEntry> messages) {
-
-            }
-
-            @Override
-            public int getClientGroupId() {
-                return 0;
-            }
-
-            @Override
-            public List<MessageEntry> getMessagesList() {
-                return null;
-            }
-        }, "4543456");
-        // Simulate a request
-        n.requestMessages();
-
-        // Simulate a send
-        MessagesPayload payload = new MessagesPayload();
-        payload.setGroupId(4543456);
-        payload.setUserId(239842);
-        List<MessageEntry> messages = new ArrayList<MessageEntry>();
-        MessageEntry temp = new MessageEntry(4543456,34858345, "Hello World");
-        messages.add(temp);
-        payload.setMessages(messages);
-        n.sendData(payload);
-
-        // Simulate a hash check
-        MessageHasher hashIt = new MessageHasher();
-        try {
-            hashIt.serializeMessageList(n.getMessages());
-
-            // Do something with the hash
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         dataManager = new DataManager(this, DataManager.ConnectionType.BLUETOOTH);
         dataManager.setGroupId(4543456);
@@ -91,7 +43,9 @@ public class MainActivity extends Activity implements SignupFragment.SignupInter
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        dataManager.handleOnActivityResult(requestCode,resultCode,data);
+        if(!dataManager.handleOnActivityResult(requestCode,resultCode,data)){
+            super.onActivityResult(requestCode,resultCode,data);
+        }
     }
 
     @Override
