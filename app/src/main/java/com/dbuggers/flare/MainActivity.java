@@ -67,4 +67,9 @@ public class MainActivity extends Activity implements SignupFragment.SignupInter
                 .replace(R.id.container, new MessageFragment())
                 .commit();
     }
+
+    @Override
+    public DataManager getDataManager() {
+        return dataManager;
+    }
 }

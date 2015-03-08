@@ -62,5 +62,14 @@ public class MessageHasher {
         return md.digest(serializeMessageList(messageList));
     }
 
+    public static boolean doMatch(byte[] ar1, byte[] ar2){
+        for(int i=0; i<Math.min(ar1.length, ar2.length); i++){
+            if(ar1[i] != ar2[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 }

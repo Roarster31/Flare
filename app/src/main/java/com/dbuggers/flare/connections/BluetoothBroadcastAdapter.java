@@ -29,6 +29,7 @@ public class BluetoothBroadcastAdapter extends BroadcastAdapter {
     public static final UUID SERVICE_UUID = UUID.fromString("1706BBC0-88AB-4B8D-877E-2237916EE929");
     public static final UUID CHARACTERISTIC_GROUP_ID_UUID = UUID.fromString("20033A23-F091-4903-AFFA-C652CCE7E220");
     public static final UUID CHARACTERISTIC_MESSAGE_HASH_UUID = UUID.fromString("D7D2C1BE-C6AA-4487-A288-C19B7508D1DE");
+    public static final ParcelUuid CHARACTERISTIC_MESSAGE_HASH_UUID_PARCELED = ParcelUuid.fromString("D7D2C1BE-C6AA-4487-A288-C19B7508D1DE");
     public static final UUID CHARACTERISTIC_MAC_ADDRESS_UUID = UUID.fromString("0FFE3A4C-BC25-4F47-97A7-C95B0CB11C9E");
     public static final UUID CHARACTERISTIC_SEND_MESSAGELIST_UUID = UUID.fromString("5C6A2A30-3FCF-4EDB-AC17-AF9EE6955AB1");
     private static final String TAG = "BluetoothBroadcastAdapter";
@@ -113,6 +114,7 @@ public class BluetoothBroadcastAdapter extends BroadcastAdapter {
     private void startAdvertising() {
         if (mBluetoothLeAdvertiser == null) return;
 
+        try {
         AdvertiseSettings settings = new AdvertiseSettings.Builder()
                 .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED)
                 .setConnectable(true)
@@ -120,12 +122,24 @@ public class BluetoothBroadcastAdapter extends BroadcastAdapter {
                 .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_MEDIUM)
                 .build();
 
-        AdvertiseData data = new AdvertiseData.Builder()
-                .setIncludeDeviceName(true)
-                .addServiceUuid(new ParcelUuid(SERVICE_UUID))
-                .build();
+        AdvertiseData data = null;
 
-        mBluetoothLeAdvertiser.startAdvertising(settings, data, mAdvertiseCallback);
+            byte[] hash = MessageHasher.hash(mDeviceInterface.getMessagesList());
+            Log.d(TAG,"hash length: "+ hash.length);
+
+            byte[] shortened = Arrays.copyOf(hash, 5);
+            Log.d(TAG,"shortened length: "+ hash.length);
+
+            data = new AdvertiseData.Builder()
+//                    .setIncludeDeviceName(true)
+                    .addServiceData(CHARACTERISTIC_MESSAGE_HASH_UUID_PARCELED, shortened)
+                    .addServiceUuid(new ParcelUuid(SERVICE_UUID))
+                    .build();
+            mBluetoothLeAdvertiser.startAdvertising(settings, data, mAdvertiseCallback);
+        } catch (IOException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private AdvertiseCallback mAdvertiseCallback = new AdvertiseCallback() {
@@ -136,7 +150,7 @@ public class BluetoothBroadcastAdapter extends BroadcastAdapter {
 
         @Override
         public void onStartFailure(int errorCode) {
-            Log.e(TAG,"could not advertise service successfully");
+            Log.e(TAG,"could not advertise service successfully, errorCode: "+errorCode);
         }
     };
 

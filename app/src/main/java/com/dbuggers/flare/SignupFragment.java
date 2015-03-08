@@ -195,31 +195,35 @@ public class SignupFragment extends Fragment {
 
                                 @Override
                                 public void onInternetError() {
-                                    Context context = getActivity().getApplicationContext();
                                     int duration = Toast.LENGTH_SHORT;
 
-                                    Toast toast = Toast.makeText(context, "Error connecting", duration);
-                                    toast.show();
+                                    if(getActivity() != null) {
+                                        Toast toast = Toast.makeText(getActivity(), "Error connecting", duration);
+                                        toast.show();
+                                    }
 
                                 }
 
                                 @Override
                                 public void onUserExistsAlready() {
-                                    Context context = getActivity().getApplicationContext();
                                     int duration = Toast.LENGTH_SHORT;
 
-                                    Toast toast = Toast.makeText(context, "User Already Exists", duration);
-                                    toast.show();
+                                    if(getActivity() != null) {
+                                        Toast toast = Toast.makeText(getActivity(), "User Already Exists", duration);
+                                        toast.show();
+                                    }
 
                                 }
 
                                 @Override
                                 public void onInvalidResponse() {
-                                    Context context = getActivity().getApplicationContext();
                                     int duration = Toast.LENGTH_SHORT;
 
-                                    Toast toast = Toast.makeText(context, "Invalid Response", duration);
-                                    toast.show();
+                                        if(getActivity() != null) {
+                                            Toast toast = Toast.makeText(getActivity(), "Invalid Response", duration);
+                                            toast.show();
+                                        }
+
 
                                 }
                             });

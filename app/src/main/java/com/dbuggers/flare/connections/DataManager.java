@@ -31,6 +31,11 @@ public class DataManager implements DeviceInterface {
     private int mGroupId;
     private List <MessageEntry> messages;
     private int userId;
+    private List<DataUpdateListener> listeners;
+
+    public interface DataUpdateListener {
+        public void onDataUpdated();
+    }
 
     @Override
     public List<MessageEntry> getMessagesList() {
@@ -41,7 +46,7 @@ public class DataManager implements DeviceInterface {
     public void onHashReceived(Device serverDevice, byte[] messagesHash) {
         try {
             byte[] localHash = MessageHasher.hash(messages);
-            if(!Arrays.equals(localHash, messagesHash)){
+            if(!MessageHasher.doMatch(localHash, messagesHash)){
                 Log.e(TAG,"hashes not not equal: " + new String(localHash) + " != " + new String(messagesHash));
                 serverDevice.requestMessages();
             }else{
@@ -64,7 +69,10 @@ public class DataManager implements DeviceInterface {
 
     @Override
     public void onNewMessagesReceived(List<MessageEntry> messages) {
-        this.messages = messages;
+        this.messages.removeAll(this.messages);
+        this.messages.addAll(messages);
+
+        notifyDataUpdateListeners();
         Log.d(TAG,"updating messages to: "+messages.toString());
     }
 
@@ -77,6 +85,10 @@ public class DataManager implements DeviceInterface {
 
     public void sendMessage(String message) {
         messages.add(new MessageEntry(System.currentTimeMillis(), userId, message));
+    }
+
+    public int getUserId() {
+        return userId;
     }
 
 
@@ -93,6 +105,7 @@ public class DataManager implements DeviceInterface {
         mDiscoveryAdapterList = new ArrayList<DiscoveryAdapter>();
         mBroadcastAdapterList = new ArrayList<BroadcastAdapter>();
         messages = new ArrayList<MessageEntry>();
+        listeners = new ArrayList<DataUpdateListener>();
 
         mBluetoothManager =
                 (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -100,8 +113,8 @@ public class DataManager implements DeviceInterface {
 
         if(mBluetoothAdapter.getAddress().equals("EC:88:92:B9:86:76")){
             messages.add(new MessageEntry(1231301123, 56123, "heya"));
-            messages.add(new MessageEntry(1231401123, 1231, "boo"));
-            messages.add(new MessageEntry(1251301123, 56123, "ouch"));
+//            messages.add(new MessageEntry(1231401123, 1231, "boo"));
+//            messages.add(new MessageEntry(1251301123, 56123, "ouch"));
         }else{
             messages.add(new MessageEntry(1231301123, 56123, "heya"));
         }
@@ -150,6 +163,19 @@ public class DataManager implements DeviceInterface {
             return true;
         }
         return false;
+    }
+
+    private void notifyDataUpdateListeners(){
+        for(DataUpdateListener listener : listeners){
+            listener.onDataUpdated();
+        }
+    }
+    public void addDataListener(DataUpdateListener dataUpdateListener){
+        listeners.add(dataUpdateListener);
+    }
+
+    public void removeDataListener(DataUpdateListener dataUpdateListener){
+        listeners.remove(dataUpdateListener);
     }
 
     public void kill() {

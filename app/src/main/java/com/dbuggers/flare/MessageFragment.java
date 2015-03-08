@@ -1,8 +1,7 @@
 package com.dbuggers.flare;
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.app.ListActivity;
-import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,9 +15,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONObject;
+import com.dbuggers.flare.connections.DataManager;
+import com.dbuggers.flare.models.MessageEntry;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -26,22 +25,33 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.http.GET;
-import retrofit.http.Path;
 import retrofit.http.Query;
-import retrofit.mime.TypedByteArray;
 
 /**
  * Created by benallen on 07/03/15.
  */
-public class MessageFragment extends Fragment {
+public class MessageFragment extends Fragment implements DataManager.DataUpdateListener {
     private static final String TAG = "Interfaces";
     public static final String mTAG = "Messages";
     ListView mListView;
-    ArrayList<String> listItems=new ArrayList<String>();
-    ArrayAdapter<String> adapter;
+    StableArrayAdapter adapter;
     EditText inputTxt;
     RestAdapter restAdapter;
     HTTPService service;
+    MessageFragmentInterface mMessageFragmentInterface;
+
+    public interface MessageFragmentInterface {
+
+
+
+        public DataManager getDataManager();
+    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mMessageFragmentInterface.getDataManager().addDataListener(this);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,7 +69,7 @@ public class MessageFragment extends Fragment {
         inputTxt = (EditText)rootView.findViewById(R.id.inputTxt);
         mListView = (ListView) rootView.findViewById(R.id.list);
 
-        adapter=new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listItems);
+        adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, mMessageFragmentInterface.getDataManager().getMessagesList());
         mListView.setAdapter(adapter);
 
         restAdapter = new RestAdapter.Builder()
@@ -70,19 +80,25 @@ public class MessageFragment extends Fragment {
 
         return rootView;
     }
-    private MessageInterface messageInterface;
-    public interface MessageInterface {
-    }
-    public void addItems(String content) {
-        listItems.add(content);
-        Log.v(mTAG,"Added item");
-        adapter.notifyDataSetChanged();
+
+    @Override
+    public void onDataUpdated() {
+        if(getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
     }
     public void userSendMessage(){
         broadcastMessage();
         String userInput = inputTxt.getText().toString();
         inputTxt.setText("");
-        addItems(userInput);
+        mMessageFragmentInterface.getDataManager().sendMessage(userInput);
+
+        adapter.notifyDataSetChanged();
 
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
@@ -106,23 +122,64 @@ public class MessageFragment extends Fragment {
         });
         // Bluetooth
     }
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
-        if(getActivity() instanceof MessageInterface){
-            messageInterface = (MessageInterface) getActivity();
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if(activity instanceof MessageFragmentInterface){
+            mMessageFragmentInterface = (MessageFragmentInterface) activity;
         }else{
-            throw new IllegalStateException(getActivity().getClass().getName()+" must implement MessageInterface");
+            throw new IllegalStateException(getActivity().getClass().getName()+" must implement MessageFragmentInterface");
         }
     }
 
-}
-interface HTTPService {
-    @GET("/main.php")
-    void listData(@Query("u") String u, Callback<JsonModel> cb);
-}
-class JsonModel {
-    public String r ;
+    private class StableArrayAdapter extends ArrayAdapter<MessageEntry> {
+
+
+        public StableArrayAdapter(Context context, int textViewResourceId, List<MessageEntry> objects) {
+            super(context, textViewResourceId, objects);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return getItem(position).hashCode();
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            final MessageEntry entry = getItem(position);
+
+            View rowView;
+            if(entry.getUserId() == mMessageFragmentInterface.getDataManager().getUserId()) {
+                rowView = inflater.inflate(R.layout.row_layout_user, parent, false);
+            }else{
+                rowView = inflater.inflate(R.layout.row_layout_else, parent, false);
+
+            }
+
+            TextView messageTextview = (TextView) rowView.findViewById(R.id.message);
+            messageTextview.setText(entry.getMessage());
+
+            return rowView;
+        }
+    }
+
+    interface HTTPService {
+        @GET("/main.php")
+        void listData(@Query("u") String u, Callback<JsonModel> cb);
+    }
+    class JsonModel {
+        public String r ;
+
+    }
 
 }
