@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -171,6 +172,7 @@ public class MessageFragment extends Fragment implements DataManager.DataUpdateL
         }
 
 
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -182,8 +184,8 @@ public class MessageFragment extends Fragment implements DataManager.DataUpdateL
                 rowView = inflater.inflate(R.layout.row_layout_user, parent, false);
             }else{
                 rowView = inflater.inflate(R.layout.row_layout_else, parent, false);
-
             }
+
 
             TextView messageTextview = (TextView) rowView.findViewById(R.id.message);
             messageTextview.setText(entry.getMessage());

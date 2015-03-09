@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Vibrator;
 import android.util.Log;
 
 import com.dbuggers.flare.helpers.MergeHelper;
@@ -76,6 +77,9 @@ public class DataManager implements DeviceInterface {
         this.messages.removeAll(this.messages);
         this.messages.addAll(messages);
 
+        if(messages.get(messages.size()-1).getMessage().equals("I need help! Come find me!")){
+            vibrate();
+        }
         notifyDataUpdateListeners();
         Log.d(TAG,"updating messages to: "+messages.toString());
     }
@@ -85,7 +89,10 @@ public class DataManager implements DeviceInterface {
         return mGroupId;
     }
 
-
+    public void vibrate () {
+        Vibrator v = (Vibrator) mActivity.getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(500);
+    }
 
     public void sendMessage(String message) {
         for (DiscoveryAdapter discoveryAdapter : mDiscoveryAdapterList) {
